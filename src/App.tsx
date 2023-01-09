@@ -1,6 +1,6 @@
 import React, { MouseEvent, useState } from "react";
 import QuestionCard from "./components/QuestionCard";
-import { fetchQuizQuestions } from "./API";
+import { Category, fetchQuizQuestions } from "./API";
 import { Difficulty } from "./API";
 import { QuestionState } from "./API";
 
@@ -11,8 +11,6 @@ export type AnswerObject = {
   correctAnswer: string,
 }
 
-const TOTAL_QUESTIONS = 10;
-
 const App = () => {
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionState[]>([]);
@@ -20,14 +18,17 @@ const App = () => {
   const [userAnswers, setUserAnswers] = useState<AnswerObject[]>([]);
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
+  const [totalQuestions, setTotalQuestions] = useState(10);
+  const [category, setCategory] = useState(0);
 
   const startTrivia = async () => {
     setLoading(true);
     setGameOver(false);
 
     const newQuestions = await fetchQuizQuestions(
-      TOTAL_QUESTIONS,
-      Difficulty.EASY
+      totalQuestions,
+      Difficulty.EASY,
+      category,
     );
 
     setQuestions(newQuestions);
@@ -56,20 +57,30 @@ const App = () => {
 
   const nextQuestion = () => {
     const nextQuestion = number + 1;
-    if(nextQuestion === TOTAL_QUESTIONS) {
+    if(nextQuestion === totalQuestions) {
       setGameOver(true);
     } else {
       setNumber(nextQuestion);
     }
   }
-  
+
   return(
     <div className="App">
       <h1>React Quiz</h1>
-      {gameOver || userAnswers.length === TOTAL_QUESTIONS ? (
-        <button className="start" onClick={startTrivia}>
-          Start
-        </button>
+      {gameOver || userAnswers.length === totalQuestions ? (
+        <div>
+          <div>
+            <label htmlFor="category">Category</label>
+            <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
+              {Category.map((category, index ) => (
+                <option key={ index } value={ category.id }>{ category.name }</option>
+              ))}
+            </select>
+          </div>
+          <button className="start" onClick={startTrivia}>
+            Start
+          </button>
+        </div>
       ) : (
         null
       )}
@@ -86,7 +97,7 @@ const App = () => {
       {!loading && !gameOver ? (
         <QuestionCard
           questionNumber={number + 1}
-          totalQuestions={ TOTAL_QUESTIONS }
+          totalQuestions={ totalQuestions }
           question={ questions[number].question }
           answers={ questions[number].answers }
           userAnswer={ userAnswers[number] }
@@ -95,7 +106,7 @@ const App = () => {
       ) : (
         null
       )}
-      {!gameOver && !loading && userAnswers.length === number + 1 && number !== TOTAL_QUESTIONS - 1 ? (
+      {!gameOver && !loading && userAnswers.length === number + 1 && number !== totalQuestions - 1 ? (
         <button className="next" onClick={nextQuestion}>
           Next Question
         </button>
