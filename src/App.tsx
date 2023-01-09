@@ -19,6 +19,7 @@ const App = () => {
   const [score, setScore] = useState(0);
   const [gameOver, setGameOver] = useState(true);
   const [totalQuestions, setTotalQuestions] = useState(10);
+  const [questionAmount, setQuestionAmount] = useState(10);
   const [category, setCategory] = useState(0);
 
   const startTrivia = async () => {
@@ -26,7 +27,7 @@ const App = () => {
     setGameOver(false);
 
     const newQuestions = await fetchQuizQuestions(
-      totalQuestions,
+      questionAmount,
       Difficulty.EASY,
       category,
     );
@@ -70,14 +71,37 @@ const App = () => {
       {gameOver || userAnswers.length === totalQuestions ? (
         <div>
           <div>
-            <label htmlFor="category">Category</label>
-            <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
-              {Category.map((category, index ) => (
-                <option key={ index } value={ category.id }>{ category.name }</option>
-              ))}
-            </select>
+            <div>
+              <label htmlFor="category">Category</label>
+              <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
+                {Category.map((category, index ) => (
+                  <option key={ index } value={ category.id }>{ category.name }</option>
+                ))}
+              </select>
+            </div>
+            <div>
+              <label htmlFor="questionAmount">Questions</label>
+              <input
+                type="number"
+                name="questionAmount"
+                id="questionAmount"
+                min={1}
+                max={50}
+                onBlur={(e) => {
+                  if (e.target.valueAsNumber == 0 || e.target.value.length == 0) e.target.value = "1";
+                  else if (e.target.valueAsNumber > 50) e.target.value = "50";
+                  setQuestionAmount(e.target.valueAsNumber);
+                }}
+                placeholder="1 - 50"
+                defaultValue={ questionAmount }
+                >
+              </input>
+            </div>
           </div>
-          <button className="start" onClick={startTrivia}>
+          <button className="start" onClick={() => {
+            setTotalQuestions(questionAmount);
+            startTrivia();
+          }}>
             Start
           </button>
         </div>
