@@ -3,7 +3,7 @@ import QuestionCard from "./components/QuestionCard";
 import { Category, fetchQuizQuestions } from "./API";
 import { Difficulty } from "./API";
 import { QuestionState } from "./API";
-import "./styles/app.css";
+import "./styles/app.scss";
 
 export type AnswerObject = {
   question: string,
