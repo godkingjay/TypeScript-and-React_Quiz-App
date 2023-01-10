@@ -10,11 +10,15 @@
 
     .setup-option {
       @include flex-center(column);
+      background: #0001;
       gap: 8px;
       width: 100%;
-      border: 2px solid #ffff;
+      border: 2px solid #fff;
       padding: 16px;
+      padding-top: 8px;
       border-radius: 8px;
+      box-shadow: inset 2px 2px 0 2px #fff1,
+                  inset -2px -2px 0 2px #0001;
     
       .option-label {
         font-size: 32px;

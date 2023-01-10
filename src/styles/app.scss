@@ -8,6 +8,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: $mainFont;
+  // outline: 1px solid #0001;
 }
 
 .App {
@@ -26,23 +27,44 @@
     padding-block: 32px;
 
     .game-interface {
+      @include flex-center(column);
+      max-width: 100%;
       border: 2px solid white;
       border-radius: 16px;
       max-width: 1080px;
       width: 100%;
-      display: flex;
-      flex-direction: column;
-      gap: 48px;
+      gap: 32px;
       flex: 1;
       padding-inline: 16px;
       padding-block: 32px;
     
-      .title {
-        font-size: 56px;
-        text-transform: uppercase;
-        color: white;
-        text-align: center;
-        overflow-wrap: break-word;
+      .title-container {
+        @include flex-center(column);
+        max-width: 720px;
+        gap: 8px;
+        
+        .title {
+          font-size: 64px;
+          text-transform: uppercase;
+          color: white;
+          text-align: center;
+          overflow-wrap: break-word;
+          text-shadow: -4px 4px #404080;
+        }
+
+        .subtitle {
+          font-size: 20px;
+          text-align: center;
+          color: white;
+          padding-block: 8px;
+          padding-inline: 16px;
+          background: #8080ff;
+          border-radius: 8px;
+          box-shadow: 0 0 8px #4441,
+                      inset 2px 2px 2px #fff1,
+                      inset -2px -2px 2px #0001;
+          border: 2px solid #fff;
+        }
       }
     }
   }
