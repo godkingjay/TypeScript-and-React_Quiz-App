@@ -52,16 +52,17 @@
 
       .input-field-setup[type=number],
       .input-field-setup {
+        color: #444;
         font-size: 24px;
         padding-block: 8px;
         padding-inline: 16px;
         border-radius: 8px;
-        border: 2px solid #444;
+        border: none;
         -webkit-appearance: none;
         -moz-appearance: textfield;
-        max-width: 320px;
-        align-self: center;
+        max-width: 120px;
         width: 100%;
+        box-shadow: inset 2px 2px 2px #0002;
       }
 
       .input-field-setup::-webkit-outer-spin-button,
@@ -69,30 +70,41 @@
         -webkit-appearance: none;
         margin: 0;
       }
+
+      .input-field-setup[type=number] {
+        text-align: center;
+        font-weight: 600;
+      }
     }
   }
   
-  .btn-start {
-    padding: 12px;
-    font-size: 24px;
-    font-weight: bold;
-    text-transform: uppercase;
-    border-radius: 8px;
-    background: #8080ff;
-    border: none;
-    color: white;
-    max-width: 320px;
+  .start-container {
+    @include flex-center(column);
     width: 100%;
-    box-shadow: 0 6px #404080,
-                inset 2px 2px 0px 2px #fff2,
-                inset -2px -2px 0px 2px #0001;
-    
-    &:hover {
-      background: #7070ff;
-      box-shadow: 0 4px #404080,
+    padding-bottom: 2px;
+
+    .btn-start {
+      padding: 12px;
+      font-size: 24px;
+      font-weight: bold;
+      text-transform: uppercase;
+      border-radius: 8px;
+      background: #8080ff;
+      border: none;
+      color: white;
+      max-width: 320px;
+      width: 100%;
+      box-shadow: 0 6px #404080,
                   inset 2px 2px 0px 2px #fff2,
                   inset -2px -2px 0px 2px #0001;
-      margin-top: 2px;
+      
+      &:hover {
+        background: #7070ff;
+        box-shadow: 0 4px #404080,
+                    inset 2px 2px 0px 2px #fff2,
+                    inset -2px -2px 0px 2px #0001;
+        margin-top: 0;
+      }
     }
   }
 }

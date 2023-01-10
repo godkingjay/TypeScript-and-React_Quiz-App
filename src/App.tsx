@@ -112,12 +112,25 @@ const App = () => {
                   </input>
                 </div>
               </div>
-              <button className="start btn-start" onClick={() => {
-                setTotalQuestions(questionAmount);
-                startTrivia();
-              }}>
-                Start
-              </button>
+              <div className="start-container">
+                <button
+                  className="start btn-start"
+                  onClick={() => {
+                    setTotalQuestions(questionAmount);
+                    startTrivia();
+                  }}
+                  onMouseOver={(e) => {
+                    const startBtnParent = e.currentTarget.parentElement!;
+                    startBtnParent.style.padding = "2px 0 0 0";
+                  }}
+                  onMouseOut={(e) => {
+                    const startBtnParent = e.currentTarget.parentElement!;
+                    startBtnParent.style.padding = "0 0 2px 0";
+                  }}
+                >
+                  Start
+                </button>
+              </div>
             </div>
           ) : (
             null
