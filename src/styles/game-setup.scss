@@ -1,13 +1,3 @@
-@import './__variables.scss';
-@import './__mixin.scss';
-
-* {
-  margin: 0;
-  padding: 0;
-  box-sizing: border-box;
-  font-family: $mainFont;
-}
-
 .game-setup {
   @include flex-center(column);
   gap: 48px;

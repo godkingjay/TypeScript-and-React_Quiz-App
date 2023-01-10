@@ -1,6 +1,7 @@
+@import './mixin.scss';
+@import './states.scss';
 @import './game-setup.scss';
-@import './_mixin.scss';
-@import './_variables.scss';
+@import './variables.scss';
 
 * {
   margin: 0;
@@ -41,6 +42,7 @@
         text-transform: uppercase;
         color: white;
         text-align: center;
+        overflow-wrap: break-word;
       }
     }
   }

@@ -32,8 +32,7 @@ const App = () => {
       Difficulty.EASY,
       category,
     );
-    
-    window.document.title = `Quiz - ${Category[category].name}`;
+
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -72,6 +71,7 @@ const App = () => {
       <div className="body">
         <div className="game-interface">
           <h1 className="title">Quiz</h1>
+          <h2 className="subtitle display-hide"></h2>
           {gameOver || userAnswers.length === totalQuestions ? (
             <div className="game-setup">
               <div className="setup-options">
@@ -106,6 +106,11 @@ const App = () => {
               <button className="start btn-start" onClick={() => {
                 setTotalQuestions(questionAmount);
                 startTrivia();
+                window.document.title = `Quiz - ${Category[category].name}`;
+
+                const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
+                subtitle.textContent = `${subtitle.textContent} - ${Category[category].name}`;
+                subtitle.classList.remove('display-hide');
               }}>
                 Start
               </button>
