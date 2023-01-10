@@ -32,7 +32,8 @@ const App = () => {
       Difficulty.EASY,
       category,
     );
-
+    
+    window.document.title = `Quiz - ${Category[category].name}`;
     setQuestions(newQuestions);
     setScore(0);
     setUserAnswers([]);
@@ -70,7 +71,7 @@ const App = () => {
     <div className="App">
       <div className="body">
         <div className="game-interface">
-          <h1 className="title">React Quiz</h1>
+          <h1 className="title">Quiz</h1>
           {gameOver || userAnswers.length === totalQuestions ? (
             <div className="game-setup">
               <div className="setup-options">
