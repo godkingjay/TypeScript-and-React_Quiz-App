@@ -3,6 +3,7 @@ import QuestionCard from "./components/QuestionCard";
 import { Category, fetchQuizQuestions } from "./API";
 import { Difficulty } from "./API";
 import { QuestionState } from "./API";
+import "./styles/app.css";
 
 export type AnswerObject = {
   question: string,
@@ -67,76 +68,80 @@ const App = () => {
 
   return(
     <div className="App">
-      <h1>React Quiz</h1>
-      {gameOver || userAnswers.length === totalQuestions ? (
-        <div>
-          <div>
-            <div>
-              <label htmlFor="category">Category</label>
-              <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
-                {Category.map((category, index ) => (
-                  <option key={ index } value={ category.id }>{ category.name }</option>
-                ))}
-              </select>
+      <div className="body">
+        <div className="game-interface">
+          <h1 className="title">React Quiz</h1>
+          {gameOver || userAnswers.length === totalQuestions ? (
+            <div className="game-setup">
+              <div className="setup-options">
+                <div className="setup-option">
+                  <label className="option-label" htmlFor="category">Category</label>
+                  <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
+                    {Category.map((category, index ) => (
+                      <option key={ index } value={ category.id }>{ category.name }</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="setup-option">
+                  <label className="option-label" htmlFor="questionAmount">Questions</label>
+                  <input
+                    type="number"
+                    name="questionAmount"
+                    id="questionAmount"
+                    min={1}
+                    max={50}
+                    onBlur={(e) => {
+                      if (e.target.valueAsNumber == 0 || e.target.value.length == 0) e.target.value = "1";
+                      else if (e.target.valueAsNumber > 50) e.target.value = "50";
+                      setQuestionAmount(e.target.valueAsNumber);
+                    }}
+                    placeholder="1 - 50"
+                    defaultValue={ questionAmount }
+                    >
+                  </input>
+                </div>
+              </div>
+              <button className="start btn-start" onClick={() => {
+                setTotalQuestions(questionAmount);
+                startTrivia();
+              }}>
+                Start
+              </button>
             </div>
-            <div>
-              <label htmlFor="questionAmount">Questions</label>
-              <input
-                type="number"
-                name="questionAmount"
-                id="questionAmount"
-                min={1}
-                max={50}
-                onBlur={(e) => {
-                  if (e.target.valueAsNumber == 0 || e.target.value.length == 0) e.target.value = "1";
-                  else if (e.target.valueAsNumber > 50) e.target.value = "50";
-                  setQuestionAmount(e.target.valueAsNumber);
-                }}
-                placeholder="1 - 50"
-                defaultValue={ questionAmount }
-                >
-              </input>
-            </div>
-          </div>
-          <button className="start" onClick={() => {
-            setTotalQuestions(questionAmount);
-            startTrivia();
-          }}>
-            Start
-          </button>
+          ) : (
+            null
+          )}
+          {!gameOver ? (
+            <p className="score">Score: {score}</p>
+          ) : (
+            null
+          )}
+          {loading ? (
+            <p className="loading-questions">Loading Questions...</p>
+          ) : (
+            null
+          )}
+          {!loading && !gameOver ? (
+            <QuestionCard
+              questionNumber={number + 1}
+              totalQuestions={ totalQuestions }
+              question={ questions[number].question }
+              answers={ questions[number].answers }
+              userAnswer={ userAnswers[number] }
+              callback={ checkAnswer }
+            />
+          ) : (
+            null
+          )}
+          {!gameOver && !loading && userAnswers.length === number + 1 && number !== totalQuestions - 1 ? (
+            <button className="next" onClick={nextQuestion}>
+              Next Question
+            </button>
+          ) : (
+            null
+          )}
         </div>
-      ) : (
-        null
-      )}
-      {!gameOver ? (
-        <p className="score">Score: {score}</p>
-      ) : (
-        null
-      )}
-      {loading ? (
-        <p className="loading-questions">Loading Questions...</p>
-      ) : (
-        null
-      )}
-      {!loading && !gameOver ? (
-        <QuestionCard
-          questionNumber={number + 1}
-          totalQuestions={ totalQuestions }
-          question={ questions[number].question }
-          answers={ questions[number].answers }
-          userAnswer={ userAnswers[number] }
-          callback={ checkAnswer }
-        />
-      ) : (
-        null
-      )}
-      {!gameOver && !loading && userAnswers.length === number + 1 && number !== totalQuestions - 1 ? (
-        <button className="next" onClick={nextQuestion}>
-          Next Question
-        </button>
-      ) : (
-        null
-      )}
+      </div>
     </div>
   );
 }
