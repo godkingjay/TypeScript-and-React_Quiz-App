@@ -30,7 +30,8 @@
   flex: 1;
   background: #ffffff10;
   box-shadow: 0 0 64px #0001;
-  padding: 32px;
+  padding-inline: 32px;
+  padding-block: 64px;
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -71,7 +72,7 @@
 .setup-option {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 8px;
   width: 100%;
 }
 
@@ -102,4 +103,45 @@
               inset 2px 2px 0px 2px #fff2,
               inset -2px -2px 0px 2px #0001;
   margin-top: 2px;
+}
+
+.select-category {
+  position: relative;
+  font-size: 24px;
+  padding-block: 8px;
+  padding-inline: 16px;
+  border-radius: 8px;
+  border: none;
+  max-width: 320px;
+  align-self: center;
+  width: 100%;
+  background: #c0c0ff;
+  box-shadow: inset 2px 2px 0 2px #fff2,
+              inset -2px -2px 0 2px #0001;
+  font-weight: bold;
+  color: #444;
+}
+
+.select-category > option {
+  background: #fff;
+}
+
+.input-field-setup[type=number],
+.input-field-setup {
+  font-size: 24px;
+  padding-block: 8px;
+  padding-inline: 16px;
+  border-radius: 8px;
+  border: 2px solid #444;
+  -webkit-appearance: none;
+  -moz-appearance: textfield;
+  max-width: 320px;
+  align-self: center;
+  width: 100%;
+}
+
+.input-field-setup::-webkit-outer-spin-button,
+.input-field-setup::-webkit-inner-spin-button {
+  -webkit-appearance: none;
+  margin: 0;
 }

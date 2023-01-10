@@ -76,7 +76,7 @@ const App = () => {
               <div className="setup-options">
                 <div className="setup-option">
                   <label className="option-label" htmlFor="category">Category</label>
-                  <select name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
+                  <select className="select-category" name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
                     {Category.map((category, index ) => (
                       <option key={ index } value={ category.id }>{ category.name }</option>
                     ))}
@@ -90,6 +90,7 @@ const App = () => {
                     id="questionAmount"
                     min={1}
                     max={50}
+                    className="input-field-setup"
                     onBlur={(e) => {
                       if (e.target.valueAsNumber == 0 || e.target.value.length == 0) e.target.value = "1";
                       else if (e.target.valueAsNumber > 50) e.target.value = "50";
