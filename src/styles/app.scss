@@ -2,13 +2,14 @@
 @import './states.scss';
 @import './game-setup.scss';
 @import './variables.scss';
+@import './question-card.scss';
 
 * {
   margin: 0;
   padding: 0;
   box-sizing: border-box;
   font-family: $mainFont;
-  // outline: 1px solid #0001;
+  outline: 1px solid #0001;
 }
 
 .App {

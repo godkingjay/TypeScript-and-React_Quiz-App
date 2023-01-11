@@ -1,5 +1,6 @@
 import React from 'react';
 import { AnswerObject } from '../App';
+import '../styles/app.scss';
 
 type Props = {
   question: string,
@@ -18,8 +19,8 @@ const QuestionCard: React.FC<Props> = ({
   questionNumber,
   totalQuestions
 }) => (
-  <div>
-    <p className='number'>
+  <div className='question-card'>
+    <p className='question-number'>
       Question: { questionNumber } / { totalQuestions }
     </p>
     <p dangerouslySetInnerHTML={{ __html: question }}></p>

@@ -1,0 +1,5 @@
+.question-card {
+  @include flex-center(column);
+  max-width: 720px;
+  width: 100%;
+}
