@@ -136,7 +136,7 @@ const App = () => {
             null
           )}
           {!gameOver ? (
-            <p className="score">Score: {score}</p>
+            <p className="score">Score: <span className="score-number">{score}</span></p>
           ) : (
             null
           )}

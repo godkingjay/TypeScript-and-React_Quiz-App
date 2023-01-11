@@ -9,7 +9,7 @@
   padding: 0;
   box-sizing: border-box;
   font-family: $mainFont;
-  outline: 1px solid #0001;
+  // outline: 1px solid #0001;
 }
 
 .App {
@@ -65,6 +65,28 @@
                       inset 2px 2px 2px #fff1,
                       inset -2px -2px 2px #0001;
           border: 2px solid #fff;
+        }
+      }
+
+      .score {
+        font-size: 32px;
+        font-weight: bold;
+        color: #80ff80;
+        text-align: center;
+        padding-inline: 16px;
+        padding-block: 4px;
+        border-radius: 8px;
+        border: solid 2px #80ff80;
+        box-shadow: inset 2px 2px 2px #fff2,
+                    inset -2px -2px 2px #0001;
+        background: #0001;
+        transition: 0.1s;
+        transform-origin: bottom;
+
+        &:hover {
+          transform: scale(1.1);
+          box-shadow: 0 0 8px #fff4;
+          background: #0000;
         }
       }
     }
