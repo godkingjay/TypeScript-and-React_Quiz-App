@@ -25,9 +25,8 @@ const App = () => {
   const [fetchFail, setFetchFail] = useState(false);
   const [gameEnd, setGameEnd] = useState(true);
 
-  console.log(`gameOver: ${gameOver}, gameEnd: ${gameEnd}`);
-
   async function startTrivia(){
+    setQuestions([]);
     setLoading(true);
     setGameOver(false);
     setFetchFail(false);
@@ -90,7 +89,7 @@ const App = () => {
     }
   }
 
-  if(!gameOver && !loading && questions.length > 0) {
+  if(!gameOver && !loading) {
     window.document.title = `Quizard - ${Category[category].name}`;
     const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
     subtitle.textContent = `${Category[category].name}`;
@@ -102,7 +101,7 @@ const App = () => {
         <div className="game-interface">
           <div className="title-container">
             <h1 className="title">Quizard</h1>
-            {!gameOver || !gameEnd ? (<h2 className="subtitle"></h2>) : (null)}
+            {(!gameOver || !gameEnd) || loading? (<h2 className="subtitle" >Fetching...</h2>) : (null)}
           </div>
 
 
