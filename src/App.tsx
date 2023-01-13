@@ -1,4 +1,4 @@
-import React, { MouseEvent, useState } from "react";
+import React, { MouseEvent, useEffect, useState } from "react";
 import QuestionCard from "./components/QuestionCard";
 import { Category, fetchQuizQuestions } from "./API";
 import { Difficulty } from "./API";
@@ -22,10 +22,12 @@ const App = () => {
   const [totalQuestions, setTotalQuestions] = useState(10);
   const [questionAmount, setQuestionAmount] = useState(10);
   const [category, setCategory] = useState(0);
+  const [fetchFail, setFetchFail] = useState(false);
 
-  const startTrivia = async () => {
+  async function startTrivia(){
     setLoading(true);
     setGameOver(false);
+    setFetchFail(false);
 
     const newQuestions = await fetchQuizQuestions(
       questionAmount,
@@ -33,11 +35,17 @@ const App = () => {
       category,
     );
 
-    setQuestions(newQuestions);
-    setScore(0);
-    setUserAnswers([]);
-    setNumber(0);
-    setLoading(false);
+    if(newQuestions.length > 0) {
+      setQuestions(newQuestions);
+      setScore(0);
+      setUserAnswers([]);
+      setNumber(0);
+      setLoading(false);
+    } else {
+      setLoading(false);
+      setGameOver(true);
+      setFetchFail(true);
+    }
   }
 
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
@@ -66,7 +74,7 @@ const App = () => {
     }
   }
 
-  if(!gameOver) {
+  if(!gameOver && !loading && questions.length > 0) {
     window.document.title = `Quiz - ${Category[category].name}`;
     const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
     subtitle.textContent = `${Category[category].name}`;
@@ -81,16 +89,33 @@ const App = () => {
             <h1 className="title">Quiz</h1>
             <h2 className="subtitle display-hide"></h2>
           </div>
-          {gameOver || userAnswers.length === totalQuestions ? (
+          {gameOver || userAnswers.length === totalQuestions && !loading ? (
             <div className="game-setup">
               <div className="setup-options">
                 <div className="setup-option">
                   <label className="option-label" htmlFor="category">Category</label>
-                  <select className="select-category" name="category" id="category" onChange={ (e) => setCategory(Number(e.target.value)) }>
-                    {Category.map((category, index ) => (
-                      <option key={ index } value={ category.id }>{ category.name }</option>
+                  <select
+                    className="select-category"
+                    name="category"
+                    id="category"
+                    onChange={ (e) => {
+                      setFetchFail(false);
+                      setCategory(Number(e.target.value));
+                    } }
+                    value={ category }
+                  >
+                    {Category.map((cat, index ) => (
+                      <option
+                        key={ index }
+                        value={ index }
+                      >{ cat.name }</option>
                     ))}
                   </select>
+                  {fetchFail ? (
+                    <p className="fetch-fail message">No questions available for <span>{ Category[category].name }</span>!</p>
+                  ) : (
+                    null
+                  )}
                 </div>
                 <div className="setup-option">
                   <label className="option-label" htmlFor="questionAmount">Questions</label>
@@ -145,7 +170,7 @@ const App = () => {
           ) : (
             null
           )}
-          {!loading && !gameOver ? (
+          {!loading && !gameOver && questions.length > 0? (
             <QuestionCard
               questionNumber={number + 1}
               totalQuestions={ totalQuestions }

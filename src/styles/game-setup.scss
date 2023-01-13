@@ -1,12 +1,14 @@
 .game-setup {
   @include flex-center(column);
   gap: 48px;
-  max-width: 480px;
+  max-width: 360px;
+  width: 100%;
   align-self: center;
 
   .setup-options {
     @include flex-center(column);
     gap: 32px;
+    width: 100%;
 
     .setup-option {
       @include flex-center(column);
@@ -48,6 +50,12 @@
           width: 100%;
           background: #fff;
         }
+      }
+
+      .fetch-fail {
+        text-align: center;
+        color: #d02020;
+        font-weight: bold;
       }
 
       .input-field-setup[type=number],
