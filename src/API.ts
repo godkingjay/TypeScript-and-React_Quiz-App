@@ -20,7 +20,6 @@ export enum Difficulty {
   HARM = 'hard',
 }
 
-
 // Question Categories
 export const Category = [
   { id: 0, name: 'Any Category' },
