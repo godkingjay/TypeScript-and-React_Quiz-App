@@ -5,6 +5,7 @@ import { Difficulty } from "./API";
 import { QuestionState } from "./API";
 import "./styles/app.scss";
 
+// User Answers Type
 export type AnswerObject = {
   question: string,
   answer: string,
@@ -12,7 +13,10 @@ export type AnswerObject = {
   correctAnswer: string,
 }
 
+// Main
 const App = () => {
+
+  // States
   const [loading, setLoading] = useState(false);
   const [questions, setQuestions] = useState<QuestionState[]>([]);
   const [number, setNumber] = useState(0);
@@ -25,12 +29,14 @@ const App = () => {
   const [fetchFail, setFetchFail] = useState(false);
   const [gameEnd, setGameEnd] = useState(true);
 
+  // When game starts
   async function startTrivia(){
     setQuestions([]);
     setLoading(true);
     setGameOver(false);
     setFetchFail(false);
 
+    // Fetch questions
     const newQuestions = await fetchQuizQuestions(
       questionAmount,
       Difficulty.EASY,
@@ -38,18 +44,23 @@ const App = () => {
     );
 
     if(newQuestions.length > 0) {
+
+      // Start Game when fetching succeeds.
       setQuestions(newQuestions);
       setScore(0);
       setUserAnswers([]);
       setNumber(0);
       setLoading(false);
     } else {
+
+      // Go back to main menu when fetching fails.
       setLoading(false);
       setGameOver(true);
       setFetchFail(true);
     }
   }
 
+  // Check selected answer if correct.
   const checkAnswer = (e: React.MouseEvent<HTMLButtonElement>) => {
     if(!gameOver) {
       const answer = e.currentTarget.value;
@@ -67,6 +78,7 @@ const App = () => {
     }
   }
 
+  // Start a new game after finishing a game.
   const newGame = () => {
     setGameEnd(true);
     const endScore = document.querySelector('.score') as HTMLParagraphElement;
@@ -75,8 +87,11 @@ const App = () => {
     endScoreBtn.classList.remove('end-score-btn');
   }
 
+  // Go to next question card.
   const nextQuestion = () => {
     const nextQuestion = number + 1;
+
+    // Go to Game Over Screen once game is finished.
     if(nextQuestion === totalQuestions) {
       setGameOver(true);
       const endScore = document.querySelector('.score') as HTMLParagraphElement;
@@ -89,6 +104,7 @@ const App = () => {
     }
   }
 
+  // Set game title.
   if(!gameOver && !loading) {
     window.document.title = `Quizard - ${Category[category].name}`;
     const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
@@ -104,12 +120,13 @@ const App = () => {
             {(!gameOver || !gameEnd) || loading? (<h2 className="subtitle" >Fetching...</h2>) : (null)}
           </div>
 
-
+          {/* Game Setup Interface */}
           {gameOver && gameEnd ? (
             <div className="game-setup">
 
-
               <div className="setup-options">
+
+                {/* Category selection. */}
                 <div className="setup-option">
                   <label className="option-label" htmlFor="category">Category</label>
                   <select
@@ -136,7 +153,7 @@ const App = () => {
                   )}
                 </div>
 
-
+                {/* Number of Questions setup. */}
                 <div className="setup-option">
                   <label className="option-label" htmlFor="questionAmount">Questions</label>
                   <input
@@ -158,7 +175,7 @@ const App = () => {
                 </div>
               </div>
 
-
+              {/* Start Button */}
               <div className="start-container">
                 <button
                   className="start btn-start"
@@ -183,7 +200,7 @@ const App = () => {
             null
           )}
 
-
+          {/* Score display once game is over. */}
           {!gameOver || !gameEnd ? (
             <div className="score-container">
               <p className="score">Score: <span className="score-number">{score}</span></p>
@@ -196,6 +213,8 @@ const App = () => {
           ) : (
             null
           )}
+
+          {/* Loading Spinner display when fetching questions. */}
           {loading ? (
             <div className="loading-container">
               <p className="loading-questions">Loading Questions...</p>
@@ -208,7 +227,7 @@ const App = () => {
             null
           )}
 
-
+          {/* Questions display upon game start. */}
           {!loading && !gameOver && questions.length > 0? (
             <QuestionCard
               questionNumber={number + 1}
@@ -222,9 +241,11 @@ const App = () => {
             null
           )}
 
-
+          {/* Next Question Button and New Game */}
           {(!gameOver || !gameEnd) && !loading && number !== totalQuestions ? (
             <div className="next-container">
+
+              {/* Next question button. */}
               {!gameOver ? (
                 <button
                   type="button"
@@ -245,6 +266,8 @@ const App = () => {
                   { number !== totalQuestions - 1 ? "Next Question" : "Next" }
                 </button>
               ) : (
+
+                // New Game Button
                 <button
                   type="button"
                   className="next btn-next"

@@ -1,5 +1,6 @@
 import { shuffleQuestions } from "./utils";
 
+// fetched questions type.
 export type Question = {
   category: string,
   correct_answer: string,
@@ -9,14 +10,18 @@ export type Question = {
   type: string,
 }
 
+// extend Question.
 export type QuestionState = Question & { answers: string[]};
 
+// question difficulties.
 export enum Difficulty {
   EASY = 'easy',
   MEDIUM = 'medium',
   HARM = 'hard',
 }
 
+
+// Question Categories
 export const Category = [
   { id: 0, name: 'Any Category' },
   { id: 9, name: 'General Knowledge' },
@@ -45,13 +50,20 @@ export const Category = [
   { id: 32, name: 'Cartoon and Animations' },
 ];
 
+// Fetch questions
 export const fetchQuizQuestions = async(amount: number, difficulty: Difficulty, category: number) => {
+  
+  // Endpoint
   let endPoint = `https://opentdb.com/api.php?`
                   + `amount=${amount}` 
                   + `&difficulty=${difficulty}`
                   + (category == 0 ? "" : `&category=${Category[category].id}`)
                   + `&type=multiple`;
+  
+  // Promise to JSON
   let data = await(await fetch(endPoint)).json();
+
+  // Shuffle Questions and add Answers.
   return(data.results.map((question: Question) => (
     {
       ...question,
