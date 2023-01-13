@@ -3,6 +3,7 @@
 @import './game-setup.scss';
 @import './variables.scss';
 @import './question-card.scss';
+@import './keyframes.scss';
 
 * {
   margin: 0;
@@ -68,25 +69,163 @@
         }
       }
 
-      .score {
-        font-size: 32px;
-        font-weight: bold;
-        color: #fff;
-        text-align: center;
-        padding-inline: 16px;
-        padding-block: 4px;
-        border-radius: 8px;
-        border: solid 2px #fff;
-        box-shadow: inset 2px 2px 2px #fff2,
-                    inset -2px -2px 2px #0001;
-        background: #0001;
-        transition: 0.1s;
-        transform-origin: bottom;
+      .score-container {
+        @include flex-center(column);
+        width: 100%;
+        max-width: 560px;
+        gap: 24px;
 
-        &:hover {
-          transform: scale(1.1);
-          box-shadow: 0 0 8px #fff4;
-          background: #0000;
+        .score {
+          font-size: 32px;
+          font-weight: bold;
+          color: #fff;
+          text-align: center;
+          padding-inline: 16px;
+          padding-block: 4px;
+          border-radius: 8px;
+          border: solid 2px #fff;
+          box-shadow: inset 2px 2px 2px #fff2,
+                      inset -2px -2px 2px #0001;
+          background: #0001;
+          transition: 0.1s;
+          transform-origin: bottom;
+  
+          &:hover {
+            transform: scale(1.1);
+            box-shadow: 0 0 8px #fff4;
+            background: #0000;
+          }
+        }
+  
+        .end-score {
+          font-size: 48px;
+          padding-inline: 24px;
+          padding-block: 6px;
+        }
+
+        .end-score-label {
+          font-size: 24px;
+          font-weight: bold;
+          color: white;
+          padding-inline: 32px;
+          text-align: center
+        }
+      }
+
+      .loading-container {
+        @include flex-center(column);
+        width: 100%;
+        max-width: 720px;
+        gap: 16px;
+
+        .loading-questions {
+          font-size: 24px;
+          font-weight: bold;
+          color: white;
+          text-transform: uppercase
+        }
+
+        #loader {
+          @include flex-center(column);
+          position: relative;
+          --size: 128px;
+          --width: 120px;
+          --height: 48px;
+          --thickness: calc(var(--width) / 24);
+          --duration: 1.5s;
+          height: 100%;
+          width: 100%;
+
+          #spinner-back {
+            top: 0;
+            left: 0;
+            position: relative;
+            width: calc(var(--height));
+            aspect-ratio: 1/1;
+            border-radius: var(--height);
+            border: var(--thickness) solid #a0a0ff;
+            box-shadow: 0 0 8px #0001,
+                        inset 0 0 8px #0001;
+          }
+
+          #spinner {
+            position: absolute;
+            top: 0;
+            left: 50%;
+            width: calc(var(--height));
+            aspect-ratio: 1/1;
+            border-radius: var(--height);
+            border: var(--thickness) solid #f0f0f0;
+            border-right-color: transparent;
+            translate: -50% 0;
+            animation: spinner var(--duration) infinite ease-in-out;
+
+            &::before,
+            &::after {
+              content: "";
+              position: absolute;
+              height: calc(var(--thickness));
+              aspect-ratio: 1/1;
+              top: calc(var(--thickness)*0.25);
+              right: calc(var(--thickness)*0.25);
+              background-color: #a0a0ff;
+              border-radius: var(--thickness);
+            }
+
+            &::after {
+              top: unset;
+              bottom: calc(var(--thickness)*0.275);
+            }
+          }
+        }
+      }
+
+      .next-container {
+        @include flex-center(column);
+        width: 100%;
+        padding-bottom: 2px;
+    
+        .btn-next {
+          padding: 8px;
+          font-size: 20px;
+          font-weight: bold;
+          text-transform: uppercase;
+          border-radius: 6px;
+          background: #8080ff;
+          border: none;
+          color: white;
+          max-width: 320px;
+          width: 100%;
+          box-shadow: 0 4px #404080,
+                      inset 2px 2px 0px 2px #fff2,
+                      inset -2px -2px 0px 2px #0001;
+          
+          &:hover:enabled {
+            background: #7070ff;
+            box-shadow: 0 2px #404080,
+                        inset 2px 2px 0px 2px #fff2,
+                        inset -2px -2px 0px 2px #0001;
+            margin-top: 0;
+          }
+
+          &:disabled {
+            opacity: 0.4;
+          }
+        }
+
+        .end-score-btn {
+          font-size: 32px;
+          box-shadow: 0 6px #404080,
+                      inset 2px 2px 0px 2px #fff2,
+                      inset -2px -2px 0px 2px #0001;
+          
+          &:hover:enabled {
+            background: #7070ff;
+            box-shadow: 0 2px #404080,
+                        inset 2px 2px 0px 2px #fff2,
+                        inset -2px -2px 0px 2px #0001;
+            margin-top: 0;
+          }
         }
       }
     }

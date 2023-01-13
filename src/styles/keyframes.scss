@@ -1,0 +1,9 @@
+@keyframes spinner {
+  68% {
+    transform: rotatez(2.63turn)
+  }
+  96%,
+  100% {
+    transform: rotatez(2turn)
+  }
+}

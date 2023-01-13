@@ -23,6 +23,9 @@ const App = () => {
   const [questionAmount, setQuestionAmount] = useState(10);
   const [category, setCategory] = useState(0);
   const [fetchFail, setFetchFail] = useState(false);
+  const [gameEnd, setGameEnd] = useState(true);
+
+  console.log(`gameOver: ${gameOver}, gameEnd: ${gameEnd}`);
 
   async function startTrivia(){
     setLoading(true);
@@ -65,20 +68,32 @@ const App = () => {
     }
   }
 
+  const newGame = () => {
+    setGameEnd(true);
+    const endScore = document.querySelector('.score') as HTMLParagraphElement;
+    const endScoreBtn = document.querySelector('.btn-next') as HTMLButtonElement;
+    endScore.classList.remove('end-score');
+    endScoreBtn.classList.remove('end-score-btn');
+  }
+
   const nextQuestion = () => {
     const nextQuestion = number + 1;
     if(nextQuestion === totalQuestions) {
       setGameOver(true);
+      const endScore = document.querySelector('.score') as HTMLParagraphElement;
+      const endScoreBtn = document.querySelector('.btn-next') as HTMLButtonElement;
+      endScore.classList.add('end-score');
+      endScoreBtn.classList.add('end-score-btn');
+      setGameEnd(false);
     } else {
       setNumber(nextQuestion);
     }
   }
 
   if(!gameOver && !loading && questions.length > 0) {
-    window.document.title = `Quiz - ${Category[category].name}`;
+    window.document.title = `Quizard - ${Category[category].name}`;
     const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
     subtitle.textContent = `${Category[category].name}`;
-    subtitle.classList.remove('display-hide');
   }
 
   return(
@@ -86,11 +101,15 @@ const App = () => {
       <div className="body">
         <div className="game-interface">
           <div className="title-container">
-            <h1 className="title">Quiz</h1>
-            <h2 className="subtitle display-hide"></h2>
+            <h1 className="title">Quizard</h1>
+            {!gameOver || !gameEnd ? (<h2 className="subtitle"></h2>) : (null)}
           </div>
-          {gameOver || userAnswers.length === totalQuestions && !loading ? (
+
+
+          {gameOver && gameEnd ? (
             <div className="game-setup">
+
+
               <div className="setup-options">
                 <div className="setup-option">
                   <label className="option-label" htmlFor="category">Category</label>
@@ -117,6 +136,8 @@ const App = () => {
                     null
                   )}
                 </div>
+
+
                 <div className="setup-option">
                   <label className="option-label" htmlFor="questionAmount">Questions</label>
                   <input
@@ -137,6 +158,8 @@ const App = () => {
                   </input>
                 </div>
               </div>
+
+
               <div className="start-container">
                 <button
                   className="start btn-start"
@@ -146,11 +169,11 @@ const App = () => {
                   }}
                   onMouseOver={(e) => {
                     const startBtnParent = e.currentTarget.parentElement!;
-                    startBtnParent.style.padding = "2px 0 0 0";
+                    startBtnParent.style.padding = "4px 0 0 0";
                   }}
                   onMouseOut={(e) => {
                     const startBtnParent = e.currentTarget.parentElement!;
-                    startBtnParent.style.padding = "0 0 2px 0";
+                    startBtnParent.style.padding = "0 0 4px 0";
                   }}
                 >
                   Start
@@ -160,16 +183,33 @@ const App = () => {
           ) : (
             null
           )}
-          {!gameOver ? (
-            <p className="score">Score: <span className="score-number">{score}</span></p>
+
+
+          {!gameOver || !gameEnd ? (
+            <div className="score-container">
+              <p className="score">Score: <span className="score-number">{score}</span></p>
+              {gameOver && !gameEnd ? (
+                <p className="end-score-label">You scored { score } out of { totalQuestions}!</p>
+              ) : (
+                null
+              )}
+            </div>
           ) : (
             null
           )}
           {loading ? (
-            <p className="loading-questions">Loading Questions...</p>
+            <div className="loading-container">
+              <p className="loading-questions">Loading Questions...</p>
+              <div id="loader">
+                <div id="spinner-back"></div>
+                <div id="spinner"></div>
+              </div>
+            </div>
           ) : (
             null
           )}
+
+
           {!loading && !gameOver && questions.length > 0? (
             <QuestionCard
               questionNumber={number + 1}
@@ -182,10 +222,50 @@ const App = () => {
           ) : (
             null
           )}
-          {!gameOver && !loading && userAnswers.length === number + 1 && number !== totalQuestions - 1 ? (
-            <button className="next" onClick={nextQuestion}>
-              Next Question
-            </button>
+
+
+          {(!gameOver || !gameEnd) && !loading && number !== totalQuestions ? (
+            <div className="next-container">
+              {!gameOver ? (
+                <button
+                  type="button"
+                  className="next btn-next"
+                  onClick={nextQuestion}
+                  onMouseOver={(e) => {
+                    const nextBtnParent = e.currentTarget.parentElement as HTMLDivElement;
+                    if(!(nextBtnParent.childNodes[0] as HTMLButtonElement).disabled){
+                      nextBtnParent.style.padding = "2px 0 0 0";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    const nextBtnParent = e.currentTarget.parentElement as HTMLDivElement;
+                    nextBtnParent.style.padding = "0 0 2px 0";
+                  }}
+                  disabled={ userAnswers.length != number + 1 ? true : false }
+                >
+                  { number !== totalQuestions - 1 ? "Next Question" : "Next" }
+                </button>
+              ) : (
+                <button
+                  type="button"
+                  className="next btn-next"
+                  onClick={newGame}
+                  onMouseOver={(e) => {
+                    const nextBtnParent = e.currentTarget.parentElement as HTMLDivElement;
+                    if(!(nextBtnParent.childNodes[0] as HTMLButtonElement).disabled){
+                      nextBtnParent.style.padding = "4px 0 0 0";
+                    }
+                  }}
+                  onMouseOut={(e) => {
+                    const nextBtnParent = e.currentTarget.parentElement as HTMLDivElement;
+                    nextBtnParent.style.padding = "0 0 4px 0";
+                  }}
+                  disabled={ userAnswers.length != number + 1 ? true : false }
+                >
+                  New Game
+                </button>
+              )}
+            </div>
           ) : (
             null
           )}

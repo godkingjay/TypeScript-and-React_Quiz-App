@@ -20,20 +20,29 @@ const QuestionCard: React.FC<Props> = ({
   totalQuestions
 }) => (
   <div className='question-card'>
-    <p className='question-number'>
+    {/* <p className='question-number'>
       Question: { questionNumber } / { totalQuestions }
-    </p>
-    <p dangerouslySetInnerHTML={{ __html: question }}></p>
-    <div>
-      {answers.map(answer => {
-        return(
-          <div key={ answer }>
-            <button disabled={userAnswer ? true : false } value={ answer } onClick={ callback }>
+    </p> */}
+    <div className='question-number-container'>
+      <div className='question-number-label'>
+          <p className='question-number-text'>Question:</p>
+          <div className='question-numbers'>
+            <p className='question-number-current'>{questionNumber}</p>
+            <p className='question-number-total'>{ totalQuestions }</p>
+          </div>
+      </div>
+    </div>
+    <div className='question-answer'>
+      <p className='question' dangerouslySetInnerHTML={{ __html: question }}></p>
+      <div className='answers'>
+        {answers.map((answer, index) => {
+          return(
+            <button type='button' className='answer' key={ index } disabled={userAnswer ? true : false } value={ answer } onClick={ callback }>
               <p>{answer}</p>
             </button>
-          </div>
-        );
-      })}
+          );
+        })}
+      </div>
     </div>
   </div>
 );
