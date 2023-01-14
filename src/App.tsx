@@ -13,6 +13,16 @@ export type AnswerObject = {
   correctAnswer: string,
 }
 
+type GameDetail = {
+  date: string,
+  time: string,
+  category: string,
+  difficulty: string,
+  questions: QuestionState[],
+  userAnswers: AnswerObject[],
+  score: number,
+}
+
 // Main
 const App = () => {
 
@@ -28,6 +38,12 @@ const App = () => {
   const [category, setCategory] = useState(0);
   const [fetchFail, setFetchFail] = useState(false);
   const [gameEnd, setGameEnd] = useState(true);
+  const [gameDate, setGameDate] = useState("");
+  const [gameTime, setGameTime] = useState("");
+  const [difficulty, setDifficulty] = useState('easy');
+  const [gameScores, setGameScores] = useState<GameDetail[]>(localStorage.getItem("game-scores") == null ? [] : JSON.parse(localStorage.getItem("game-scores")!));
+
+  // console.log(gameScores);
 
   // When game starts
   async function startTrivia(){
@@ -39,7 +55,7 @@ const App = () => {
     // Fetch questions
     const newQuestions = await fetchQuizQuestions(
       questionAmount,
-      Difficulty.EASY,
+      difficulty,
       category,
     );
 
@@ -50,6 +66,17 @@ const App = () => {
       setScore(0);
       setUserAnswers([]);
       setNumber(0);
+
+      const getDateTime = new Date();
+      const gameYears = getDateTime.getFullYear();
+      const gameMonths = getDateTime.getMonth();
+      const gameDays = getDateTime.getDate();
+      const gameHours = getDateTime.getHours();
+      const gameMinutes = getDateTime.getMinutes();
+
+      setGameDate(`${ gameYears }-${ gameMonths <= 9 ? "0" + (gameMonths + 1) : gameMonths + 1 }-${ gameDays < 10 ? "0" + gameDays : gameDays }`);
+      setGameTime(`${ (gameHours % 12 < 10 ? "0" : "") + gameHours % 12}:${ gameMinutes < 10 ? "0" + gameMinutes : gameMinutes} ${ gameHours >= 12 ? "PM" : "AM" }`);
+
       setLoading(false);
     } else {
 
@@ -85,6 +112,21 @@ const App = () => {
     const endScoreBtn = document.querySelector('.btn-next') as HTMLButtonElement;
     endScore.classList.remove('end-score');
     endScoreBtn.classList.remove('end-score-btn');
+
+    // Add to user data.
+    const gameDetail: GameDetail = {
+      date: gameDate,
+      time: gameTime,
+      category: Category[category].name,
+      difficulty,
+      questions,
+      userAnswers,
+      score,
+    };
+    const tempScores = gameScores;
+    tempScores.unshift(gameDetail);
+    setGameScores(tempScores);
+    localStorage.setItem('game-scores', JSON.stringify(gameScores));
   }
 
   // Go to next question card.
@@ -130,7 +172,7 @@ const App = () => {
                 <div className="setup-option">
                   <label className="option-label" htmlFor="category">Category</label>
                   <select
-                    className="select-category"
+                    className="category input-select"
                     name="category"
                     id="category"
                     onChange={ (e) => {
@@ -151,6 +193,24 @@ const App = () => {
                   ) : (
                     null
                   )}
+                </div>
+
+                {/* Difficulty Selection */}
+                <div className="setup-option">
+                  <label className="option-label" htmlFor="difficulty">Difficulty</label>
+                  <select
+                    className="difficulty input-select"
+                    name="difficulty"
+                    id="difficulty"
+                    onChange={ (e) => {
+                      setDifficulty(e.target.value);
+                    } }
+                    value={ difficulty }
+                  >
+                    <option value={"easy"}>Easy</option>
+                    <option value={"medium"}>Medium</option>
+                    <option value={"hard"}>Hard</option>
+                  </select>
                 </div>
 
                 {/* Number of Questions setup. */}
