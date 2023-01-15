@@ -106,7 +106,9 @@
                   inset 2px 2px 0px 2px #fff2,
                   inset -2px -2px 0px 2px #0001;
       
-      &:hover {
+      &:hover:enabled,
+      &:focus:enabled,
+      &:active:enabled {
         background: #7070ff;
         box-shadow: 0 2px #404080,
                     inset 2px 2px 0px 2px #fff2,

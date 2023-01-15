@@ -42,9 +42,106 @@ const App = () => {
   const [gameTime, setGameTime] = useState("");
   const [difficulty, setDifficulty] = useState('easy');
   const [gameScores, setGameScores] = useState<GameDetail[]>(localStorage.getItem("game-scores") == null ? [] : JSON.parse(localStorage.getItem("game-scores")!));
+  const [gameScoresPage, setGameScoresPage] = useState(1);
+  const [gameScoresTotalPage, setGameScoresTotalPage] = useState((gameScores.length > 0 ? Math.trunc((gameScores.length - 1) / 10) : 0) + 1);
+  const [gamePageScores, setPageScores] = useState((gameScores.slice()).splice(0, 10));
 
   // console.log(gameScores);
 
+  // console.log({
+  //   scoreLength: gameScores.length,
+  //   pages: gameScoresTotalPage,
+  //   page: gameScoresPage,
+  //   // pageScores: gamePageScores,
+  //   // scores: gameScores,
+  // });
+
+  useEffect(() => {
+    setGameScoresTotalPage((gameScores.length > 0 ? Math.trunc((gameScores.length - 1) / 10) : 0) + 1);
+    if(gameOver && gameEnd){
+      const pagination = document.querySelector('.game-scores-pagination') as HTMLUListElement;
+      let child = pagination.lastElementChild as HTMLElement;
+      
+      while(child) {
+        pagination.removeChild(child);
+        child = pagination.lastElementChild as HTMLElement;
+      }
+
+      const createPagination = () => {
+
+        let beforePage = gameScoresPage - 1;
+        let afterPage = gameScoresPage + 1;
+
+        const dirBtn = (dir: string, limit: number) => {
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          
+          button.textContent = dir;
+          button.type = 'button';
+          button.classList.add('pagination-direction');
+          li.appendChild(button);
+
+          if(dir === 'Prev'){
+            button.dataset.direction = 'prev';
+            button.addEventListener('click', () => {
+              setGameScoresPage(prev => prev - 1);
+            });
+          }
+
+          if(dir === 'Next'){
+            button.dataset.direction = 'next';
+            button.addEventListener('click', () => {
+              setGameScoresPage(prev => prev + 1);
+            });
+          }
+
+          if(gameScoresPage == limit) button.disabled = true;
+
+          return li;
+        }
+
+        pagination.appendChild(dirBtn("Prev", 1));
+
+        for(let pages = gameScoresPage === gameScoresTotalPage && gameScoresPage >= 3 ? beforePage - 1 : beforePage; pages <= afterPage; pages++){
+
+          if(pages > gameScoresTotalPage) continue;
+          if(pages === 0){
+            pages++;
+            if(afterPage < gameScoresTotalPage) afterPage++;
+          };
+
+          const li = document.createElement('li');
+          const button = document.createElement('button');
+          button.type = 'button';
+          button.classList.add('pagination-numbers');
+          button.textContent = pages.toString();
+
+          if(pages === gameScoresPage) button.dataset.current = 'true';
+
+          li.appendChild(button);
+
+          button.addEventListener('click', () => setGameScoresPage(pages));
+
+          pagination.appendChild(li);
+        }
+
+        pagination.appendChild(dirBtn("Next", gameScoresTotalPage));
+      }
+
+      createPagination();
+    }
+
+    setPageScores((gameScores.slice()).splice((gameScoresPage - 1) * 10, 10));
+  }, [gameEnd, gameOver, gameScores, gameScoresPage, gameScoresTotalPage]);
+
+  useEffect(() => {
+    if(!gameOver && !loading) {
+      window.document.title = `Quizard - ${Category[category].name}`;
+      const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
+      subtitle.textContent = `${Category[category].name}`;
+    }
+  }, [gameOver, loading]);
+  
   // When game starts
   async function startTrivia(){
     setQuestions([]);
@@ -127,6 +224,7 @@ const App = () => {
     tempScores.unshift(gameDetail);
     setGameScores(tempScores);
     localStorage.setItem('game-scores', JSON.stringify(gameScores));
+    setGameScoresPage(1);
   }
 
   // Go to next question card.
@@ -144,13 +242,6 @@ const App = () => {
     } else {
       setNumber(nextQuestion);
     }
-  }
-
-  // Set game title.
-  if(!gameOver && !loading) {
-    window.document.title = `Quizard - ${Category[category].name}`;
-    const subtitle = document.querySelector('.subtitle') as HTMLHeadingElement;
-    subtitle.textContent = `${Category[category].name}`;
   }
 
   return(
@@ -347,6 +438,51 @@ const App = () => {
                   New Game
                 </button>
               )}
+            </div>
+          ) : (
+            null
+          )}
+          {gameOver && gameEnd && !loading ? (
+            <div className="game-scores-container">
+              <div className="game-scores-header">
+                <h2 className="game-scores-header-label">Game Scores</h2>
+              </div>
+              <div className="game-scores-table-container">
+              {gamePageScores.length > 0 ? (
+                <table className="game-scores-table">
+                  <thead>
+                    <tr className="game-scores-table-header-row">
+                      <td className="game-scores-table-header">Date</td>
+                      {/* <td className="game-scores-table-header">Time</td> */}
+                      <td className="game-scores-table-header">Category</td>
+                      <td className="game-scores-table-header">Difficulty</td>
+                      <td className="game-scores-table-header">Score</td>
+                    </tr>
+                  </thead>
+                  <tbody>
+                  {gamePageScores.map((gameScore, index) => (
+                    <tr className="game-score-table-row" key={ index }>
+                      <td data-date><p>{gameScore.date}<sup>[{gameScore.time.slice(0,5)}]</sup></p></td>
+                      {/* <td data-time><p>{gameScore.time}</p></td> */}
+                      <td data-category><p>{gameScore.category}</p></td>
+                      <td data-difficulty={gameScore.difficulty}><p>{gameScore.difficulty}</p></td>
+                      <td data-score={
+                        gameScore.score >= 0.90 * gameScore.questions.length ? "pass" :
+                        gameScore.score >= 0.75 * gameScore.questions.length ? "good" :
+                        "failed"
+                      }><p>{gameScore.score}<sub>/{gameScore.questions.length}</sub></p></td>
+                    </tr>
+                  ))}
+                  </tbody>
+                </table>
+              ) : (
+                <p className="game-scores-table-empty-label">No score! Start a game and see your scores here.</p>
+              )}
+              </div>
+              <div className="game-scores-footer">
+                <ul className="game-scores-pagination" >
+                </ul>
+              </div>
             </div>
           ) : (
             null

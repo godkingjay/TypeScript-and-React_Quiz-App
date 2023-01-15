@@ -93,7 +93,9 @@
                     inset -2px -2px 2px #0004;
         overflow: hidden;
 
-        &:hover:enabled {
+        &:hover:enabled,
+        &:active:enabled,
+        &:focus:enabled {
           background: #fff;
           transform: scale(1.05);
         }

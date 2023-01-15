@@ -11,6 +11,7 @@
   box-sizing: border-box;
   font-family: $mainFont;
   // outline: 1px solid #0001;
+  // background: #0f01
 }
 
 .App {
@@ -200,7 +201,9 @@
                       inset 2px 2px 0px 2px #fff2,
                       inset -2px -2px 0px 2px #0001;
           
-          &:hover:enabled {
+          &:hover:enabled,
+          &:focus:enabled,
+          &:active:enabled {
             background: #7070ff;
             box-shadow: 0 2px #404080,
                         inset 2px 2px 0px 2px #fff2,
@@ -219,12 +222,213 @@
                       inset 2px 2px 0px 2px #fff2,
                       inset -2px -2px 0px 2px #0001;
           
-          &:hover:enabled {
+          &:hover:enabled,
+          &:focus:enabled,
+          &:active:enabled {
             background: #7070ff;
             box-shadow: 0 2px #404080,
                         inset 2px 2px 0px 2px #fff2,
                         inset -2px -2px 0px 2px #0001;
             margin-top: 0;
+          }
+        }
+      }
+
+      .game-scores-container {
+        width: 100%;
+        background: white;
+        overflow: hidden;
+        --border: 16px;
+        border-radius: var(--border);
+        max-width: 720px;
+        
+        .game-scores-header {
+          @include flex-center(column);
+          border-radius: var(--border) var(--border) 0 0;
+          background: #8080ff;
+          border-bottom: 2px solid #0001;
+          padding-block: 4px;
+          padding-inline: 16px;
+          width: 100%;
+          box-shadow: 0 4px 4px #0001,
+                      inset 4px 4px #fff1,
+                      inset -4px -2px #0001;
+
+          .game-scores-header-label {
+            font-size: 32px;
+            text-transform: uppercase;
+            color: white;
+            text-shadow: -2px 2px #0002;
+          }
+        }
+
+        .game-scores-table-container {
+          padding-block: 4px;
+          padding-inline: 4px;
+          overflow-x: scroll;
+
+          .game-scores-table {
+            padding-bottom: 6px;
+            width: 100%;
+            border-collapse: collapse;
+            
+            td {
+              height: 100%;
+              text-align: center;
+              color: #444;
+              padding-block: 6px;
+              padding-inline: 4px;
+            }
+
+            .game-scores-table-header-row {
+              border-bottom: 1px solid #4441;
+
+              td {
+                text-align: center;
+                color: #444;
+                padding-bottom: 8px;
+              }
+  
+              .game-scores-table-header {
+                text-align: center;
+                font-weight: bold;
+              }
+            }
+  
+            .game-score-table-row {
+              border-bottom: 1px solid #4441;
+
+              td {
+                font-size: 12px;
+
+                &[data-date] {
+
+                  sup {
+                    font-size: 8px;
+                    color: #888;
+                  }
+                }
+
+                &[data-difficulty] {
+                  text-transform: capitalize;
+                  font-weight: bold;
+
+                  &[data-difficulty="easy"] {
+                    color: #40ff40;
+                  }
+    
+                  &[data-difficulty="medium"] {
+                    color: #ffc000;
+                  }
+    
+                  &[data-difficulty="hard"] {
+                    color: #ff4040;
+                  }
+                }
+
+                &[data-score] {
+                  font-weight: bold;
+                  font-size: 16px;
+
+                  &[data-score="pass"] {
+                    color: #40ff40;
+                  }
+
+                  &[data-score="good"] {
+                    color: #ffc000;
+                  }
+
+                  &[data-score="pass"] {
+                    color: #ff4040;
+                  }
+
+                  sub {
+                    font-size: 12px;
+                    font-weight: normal;
+                    color: #888;
+                  }
+                }
+              }
+
+              &:hover {
+                background: #f0f0f0;
+              }
+            }
+          }
+
+          .game-scores-table-empty-label {
+            @include flex-center(column);
+            height: 160px;
+            width: 100%;
+            text-align: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 16px;
+            color: #444;
+          }
+        }
+
+        .game-scores-footer {
+          @include flex-center(column);
+          padding-top: 16px;
+          padding-bottom: 8px;
+          padding-inline: 8px;
+          width: 100%;
+        }
+
+        .game-scores-pagination {
+          @include flex-center(row);
+          gap: 12px;
+          list-style: none;
+          flex-wrap: wrap;
+
+          .pagination-numbers {
+            @include flex-center(column);
+            aspect-ratio: 1;
+            width: 28px;
+            border-radius: 1000px;
+            background: #f0f0ff;
+            border: 1px solid #4442;
+            justify-content: center;
+            text-align: center;
+
+            &:not([current-page="true"]):hover,
+            &:not([current-page="true"]):active,
+            &:not([current-current="true"]):focus {
+              color: white;
+              background: #8080ff;
+            }
+          }
+
+          .pagination-direction {
+            @include flex-center(column);
+            width: max-content;
+            height: 28px;
+            aspect-ratio: 2/1;
+            padding-inline: 8px;
+            border-radius: 1000px;
+            justify-content: center;
+            text-align: center;
+            background: #f0f0ff;
+            border: 1px solid #4442;
+            color: #404080;
+
+            &:disabled {
+              opacity: 0.5;
+            }
+
+            &:hover:enabled,
+            &:focus:enabled,
+            &:active:enabled {
+              color: white;
+              background: #8080ff;
+            }
+          }
+
+          .pagination-numbers[data-current="true"] {
+            background: #8080ff;
+            color: white;
+            font-weight: bold;
           }
         }
       }
