@@ -338,8 +338,8 @@
                     color: #ffc000;
                   }
 
-                  &[data-score="pass"] {
-                    color: #ff4040;
+                  &[data-score="failed"] {
+                    color: #444;
                   }
 
                   sub {
